@@ -1,8 +1,8 @@
 🛠 Scrapy 크롤러 실행
 1️⃣ Scrapy 크롤러 실행
 
-scrapy crawl onion_spider -o onion_data.json
-👉 .onion 사이트 크롤링 후 결과를 onion_data.json에 저장
+scrapy crawl darkweb_eamil_scraper -o darkweb_eamil_scraper.json
+👉 .onion 사이트 크롤링 후 결과를 darkweb_eamil_scraper.json에 저장
 
 2️⃣ Scrapy 크롤러 실행 (디버깅 모드)
 
