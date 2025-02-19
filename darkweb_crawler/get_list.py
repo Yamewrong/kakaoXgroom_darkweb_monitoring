@@ -10,6 +10,6 @@ onion_urls = [entry["onion_link"].split("redirect_url=")[-1] for entry in data]
 # 파일로 저장
 with open("onion_urls.txt", "w", encoding="utf-8") as f:
     for url in onion_urls:
-        f.write(url + "\n")
+        f.write('"'+url+'"' + "\n")
 
 print("추출된 .onion URL이 onion_urls.txt 파일에 저장되었습니다.")

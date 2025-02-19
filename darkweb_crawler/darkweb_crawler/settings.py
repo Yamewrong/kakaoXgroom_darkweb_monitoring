@@ -8,16 +8,15 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "darkweb_crawler"
-
 SPIDER_MODULES = ["darkweb_crawler.spiders"]
 NEWSPIDER_MODULE = "darkweb_crawler.spiders"
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-    'darkweb_crawler.middlewares.TorProxyMiddleware': 100,  
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 1,
 }
+HTTP_PROXY = 'socks5h://127.0.0.1:9050'
+
 
 HTTPPROXY_ENABLED = True
-HTTP_PROXY = "socks5h://127.0.0.1:9050"
 
 # 봇 차단 방지 설정
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"

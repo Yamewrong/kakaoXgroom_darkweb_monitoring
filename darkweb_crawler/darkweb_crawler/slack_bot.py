@@ -2,7 +2,7 @@ import requests
 import json
 
 # 🔹 Slack Webhook URL (설정한 Webhook URL 입력)
-SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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"
+SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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"
 
 def send_slack_message(message):
     """Slack 채널로 메시지를 전송하는 함수"""

@@ -7,17 +7,15 @@ class DarkWebSpider(scrapy.Spider):
     
     # ✅ 다크웹 크롤링 대상 사이트 목록
     start_urls = [
-"http://tzoz3be4x4vd7ydkruxl2hczax3m5yv5up4frq4y2awnel7pyj6nxbid.onion/contribute/design/MAC_address/"
-"https://ainita2ucg473h7tjp3j32fu6wabxtrk2lrz6hauystamloiap3a4did.onion/signing-up-for-chapar-receiving-email-via-sms"
-"http://hellhoh5o35sylxrpfu45p5r74n2lzvirnvszmziuvn7bcejlynaqxyd.onion/threads/cock-li-under-red-alert-a-privacy-based-email.12424/"
-    ]
+  ]
 
     custom_settings = {
-        "DOWNLOADER_MIDDLEWARES": {
-            "scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware": 1,
-        },
-        "PROXY": "socks5h://127.0.0.1:9050"
-    }
+    "DOWNLOADER_MIDDLEWARES": {
+        "scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware": 1,
+    },
+    "HTTP_PROXY": "socks5h://127.0.0.1:9050"
+}
+
     def parse(self, response):
         # 이메일 패턴 정규식
         email_pattern = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
@@ -35,9 +33,16 @@ class DarkWebSpider(scrapy.Spider):
         }
 
     def send_slack_alert(self, url, emails):
-        """이메일이 감지되면 Slack 웹훅을 이용하여 메시지를 전송하는 함수"""
-        message = f"🚨 Darkweb Email Leak Detected! 🚨\n" \
-                    f"🔗 URL: {url}\n" \
-                    f"📧 Emails Found: {', '.join(emails)}"
+        """Slack 웹훅을 이용하여 알림을 전송하는 함수"""
+        max_emails = 5  # 최대 5개 이메일만 Slack 알림에 포함
+        email_list = ", ".join(emails[:max_emails])
+        extra_count = len(emails) - max_emails
 
-        send_slack_message(message)  # ✅ Slack 알림 전송
+        message = f"🚨 Darkweb Email Leak Detected! 🚨\n" \
+                  f"🔗 URL: {url}\n" \
+                  f"📧 Emails Found: {email_list}" 
+
+        if extra_count > 0:
+            message += f"\n📌 (and {extra_count} more...)"
+
+        send_slack_message(message)
