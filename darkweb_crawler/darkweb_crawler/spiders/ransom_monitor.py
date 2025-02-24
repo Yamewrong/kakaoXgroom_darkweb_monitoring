@@ -23,7 +23,7 @@ AUTH_METHODS = {
 }
 
 # 🔔 Slack Webhook URL
-SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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"
+SLACK_WEBHOOK_URL = ""
 
 # 📂 SQLite DB 설정
 DB_FILE = "ransomware_domains.db"
