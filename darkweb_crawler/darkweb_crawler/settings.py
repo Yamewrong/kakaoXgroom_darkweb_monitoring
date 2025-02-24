@@ -1,106 +1,51 @@
 # Scrapy settings for darkweb_crawler project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "darkweb_crawler"
 SPIDER_MODULES = ["darkweb_crawler.spiders"]
 NEWSPIDER_MODULE = "darkweb_crawler.spiders"
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 1,
-}
-HTTP_PROXY = 'socks5h://127.0.0.1:9050'
 
-
+# 🚀 SOCKS5 프록시 직접 적용 (scrapy-socks2 없이)
 HTTPPROXY_ENABLED = True
+PROXY_URL = "socks5h://127.0.0.1:9050"
 
-# 봇 차단 방지 설정
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+# 📌 Scrapy에서 프록시 적용 방법
+PROXY_URL = "socks5h://127.0.0.1:9050"
 
-# 다운로드 딜레이 설정 (서버 과부하 방지)
-DOWNLOAD_DELAY = 2
+# ✅ 기본 다운로드 핸들러
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
+}
+# 🚀 프록시 직접 환경 변수에 설정
+import os
+os.environ["http_proxy"] = "socks5h://127.0.0.1:9050"
+os.environ["https_proxy"] = "socks5h://127.0.0.1:9050"
 
-# 리트라이 설정
+# ✅ HTTP Proxy 활성화
+HTTPPROXY_ENABLED = True
+REQUESTS_PROXY = PROXY_URL
+
+# ✅ Tor 네트워크 설정
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+DOWNLOAD_DELAY = 3
 RETRY_ENABLED = True
-RETRY_TIMES = 3
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "darkweb_crawler (+http://www.yourdomain.com)"
-
-# Obey robots.txt rules
+RETRY_TIMES = 15  # 📌 Tor 네트워크에서 불안정한 연결 대비
+RETRY_HTTP_CODES = [500, 502, 503, 504, 403, 408]
+DOWNLOAD_TIMEOUT = 180
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 ROBOTSTXT_OBEY = False
 
-# Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+# ✅ Tor 네트워크를 사용할 경우 User-Agent를 추가로 지정
+DEFAULT_REQUEST_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+}
 
-# Configure a delay for requests for the same website (default: 0)
-# See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
-# The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+# ✅ 동시 요청 수 조정 (Tor 부하 방지)
+CONCURRENT_REQUESTS = 8
+CONCURRENT_REQUESTS_PER_DOMAIN = 4
+CONCURRENT_REQUESTS_PER_IP = 4
 
-# Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+# ✅ 캐시 사용 안 함 (최신 데이터 수집 목적)
+HTTPCACHE_ENABLED = False
 
-# Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
-
-# Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#    "Accept-Language": "en",
-#}
-
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "darkweb_crawler.middlewares.DarkwebCrawlerSpiderMiddleware": 543,
-#}
-
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "darkweb_crawler.middlewares.DarkwebCrawlerDownloaderMiddleware": 543,
-#}
-
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
-
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "darkweb_crawler.pipelines.DarkwebCrawlerPipeline": 300,
-#}
-
-# Enable and configure the AutoThrottle extension (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
-# The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
-# The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
-# The average number of requests Scrapy should be sending in parallel to
-# each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-# Enable showing throttling stats for every response received:
-#AUTOTHROTTLE_DEBUG = False
-
-# Enable and configure HTTP caching (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = "httpcache"
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
-
-# Set settings whose default value is deprecated to a future-proof value
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+# ✅ 데이터 저장 인코딩 설정
 FEED_EXPORT_ENCODING = "utf-8"
