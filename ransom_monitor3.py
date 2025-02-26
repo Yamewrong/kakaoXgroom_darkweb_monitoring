@@ -76,7 +76,7 @@ def update_country_in_db(db_path, table_name, domain, country):
 def main():
     db_path = 'my_ransomware_domains.db'  # 실제 DB 파일 경로로 변경
     table_name = 'domains'      # 실제 테이블 이름으로 변경
-    api_key = 'at_k2hOe8U1K45FWWym6mFG0Y6PDiPfE'       # whoisxml API 키로 변경
+    api_key = '본인의 API키로 변경'       # whoisxml API 키로 변경
 
     # country 컬럼이 존재하는지 확인 후, 없으면 추가
     ensure_country_column_exists(db_path, table_name)
