@@ -18,6 +18,10 @@ DB_FILE = "victim.db"
 # 📂 쿠키 정보 저장된 JSON 파일
 CONFIG_FILE = "config.json"
 
+#🔍 WHOIS API 설정
+WHOIS_API_KEY = ""
+WHOIS_URL = "https://www.whoisxmlapi.com/whoisserver/WhoisService"
+
 # 📌 도메인 필터 규칙
 VALID_DOMAINS = (
     ".com", ".net", ".org", ".edu", ".za", ".ma", ".ca", ".vn", ".bank",
@@ -42,6 +46,7 @@ def setup_database():
             site TEXT NOT NULL,
             domain TEXT NOT NULL UNIQUE,
             upload_time TEXT DEFAULT NULL,
+            country TEXT DEFAULT 'Unknown',
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -50,13 +55,51 @@ def setup_database():
     conn.close()
     print("✅ 데이터베이스가 설정되었습니다.")
 
-
-def save_to_db(site, domain, upload_time):
-    """새로운 도메인을 DB에 저장 (중복 방지)"""
+def is_domain_in_db(domain):
+    """DB에 해당 도메인이 있는지 확인"""
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM leaks WHERE domain = ?", (domain,))
+    exists = cursor.fetchone() is not None
+    conn.close()
+    return exists
+
+def get_domain_country(domain):
+    """WHOIS API를 사용하여 도메인의 국가 정보 조회 (새로운 도메인만 조회)"""
+    params = {
+        "apiKey": WHOIS_API_KEY,
+        "domainName": domain,
+        "outputFormat": "json"
+    }
+
     try:
-        cursor.execute("INSERT INTO leaks (site, domain, upload_time) VALUES (?, ?, ?)", (site, domain, upload_time))
+        response = requests.get(WHOIS_URL, params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+
+        # 국가 정보 추출
+        return data.get("WhoisRecord", {}).get("registrant", {}).get("country", "Unknown")
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ WHOIS 요청 실패 ({domain}): {e}")
+        return "Unknown"
+
+def save_to_db(site, domain, upload_time):
+    """새로운 도메인을 DB에 저장 (기존 DB에 없을 때만 WHOIS 조회)"""
+    if is_domain_in_db(domain):
+        return False  # 중복된 경우 저장 안 함
+
+    # WHOIS API로 국가 정보 조회 (새로운 도메인일 때만 실행)
+    country = get_domain_country(domain)
+
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute(
+            "INSERT INTO leaks (site, domain, upload_time, country) VALUES (?, ?, ?, ?)",
+            (site, domain, upload_time, country)
+        )
         conn.commit()
         return True  # 새로 추가된 경우
     except sqlite3.IntegrityError:
@@ -115,12 +158,13 @@ def crawl_domains(target_url):
 def monitor_ransomware_sites():
     """랜섬웨어 사이트들을 주기적으로 모니터링"""
     setup_database()
+
     targets = [
         "http://ransomxifxwc5eteopdobynonjctkxxvap77yqifu2emfbecgbqdw6qd.onion/",
     ]
 
     for target_url in targets:
-        print(f"🔍 {target_url} 크롤링 중...")  # 실행될 때만 출력
+        print(f"🔍 {target_url} 크롤링 중...")
         domains = crawl_domains(target_url)
         
         if domains:
@@ -129,7 +173,6 @@ def monitor_ransomware_sites():
                 if save_to_db(target_url, domain, upload_time):
                     new_count += 1
 
-            # ✅ 새로운 데이터가 있을 때만 출력
             if new_count > 0:
                 print(f"✅ 크롤링 완료! {new_count}개의 새로운 데이터 저장됨")
             else:
