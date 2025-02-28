@@ -1,5 +1,5 @@
 순서
-slack_webhook_url = "https://hooks.slack.com/services/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"
+slack_webhook_url => 발행 받기
 1. ngrok 실행
    -> slack은 local에서 flask로 올린 서버에 접근 불가능해서 우회
 2. https://b37b-122-36-135-6.ngrok-free.app 와 같이 서버가 나오면
