@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가별 랜섬웨어 감염 도메인 시각화</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        canvas {
+            max-width: 80%;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+    <script>
+        async function fetchCountryStats() {
+            try {
+                const response = await fetch('/api/country_stats');
+                const countryData = await response.json();
+
+                let labels = Object.keys(countryData);
+                let values = Object.values(countryData);
+
+                // 내림차순 정렬
+                let sortedData = labels.map((label, index) => ({ label, value: values[index] }))
+                                        .sort((a, b) => b.value - a.value);
+                labels = sortedData.map(item => item.label);
+                values = sortedData.map(item => item.value);
+
+                const ctx = document.getElementById('countryChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Detected Ransomware Domains by Country',
+                            data: values,
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("국가별 데이터 불러오기 실패:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchCountryStats);
+    </script>
+</head>
+<body>
+    <h1>국가별 랜섬웨어 감염 도메인 수</h1>
+    
+    <canvas id="countryChart" width="400" height="200"></canvas>
+
+    <!-- 메인 페이지로 돌아가는 버튼 -->
+    <a href="/">
+        <button class="back-button">🔙 돌아가기</button>
+    </a>
+</body>
+</html>
