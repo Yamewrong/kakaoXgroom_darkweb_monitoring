@@ -43,6 +43,7 @@
 ```bash
 📂 darkweb_crawler
 │── 📜 README.md   # 프로젝트 문서
+│── 📜 requirements.txt  
 │── 📂 darkweb_crawler  # 크롤러 디렉토리
 │   │── 📂 data
 │   │   ├── leaked_credit_cards.json  # 수집된 유출 데이터
