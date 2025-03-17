@@ -1,16 +1,16 @@
-# 🔍 Dark Web Ransomware Monitoring System
+# 🔍 다크웹 랜섬웨어 모니터링 시스템
 
 ![header](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Dark%20Web%20Monitoring&fontSize=40&fontAlignY=40)
 
-## 📌 Project Overview
+## 📌 프로젝트 개요
 
-This project is designed for **automated ransomware victim domain monitoring** using **dark web intelligence**. It utilizes **Scrapy for web crawling, Selenium for bypassing obstacles, and Flask for visualization**, integrating **Tor network access** to extract data from hidden `.onion` sites.
+이 프로젝트는 **다크웹 기반의 랜섬웨어 피해 도메인 모니터링 시스템**으로, **자동화된 크롤링 및 실시간 보안 알림 기능**을 제공합니다. Scrapy를 이용한 **웹 크롤링**, Selenium을 활용한 **우회 탐색**, Flask 기반 **웹 대시보드**가 포함되며, **Tor 네트워크를 활용하여 `.onion` 사이트에서 데이터를 수집**합니다.
 
-This project was developed as part of the **KakaoXGoorm Information Security Master Program**.
+이 프로젝트는 **KakaoXGoorm 정보보호 마스터 과정**의 일환으로 개발되었습니다.
 
 ---
 
-## 🛠 Tech Stack
+## 🛠 기술 스택
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
@@ -21,56 +21,56 @@ This project was developed as part of the **KakaoXGoorm Information Security Mas
 
 ---
 
-## 🚀 Features
+## 🚀 주요 기능
 
-### 🕵️ **Dark Web Crawling & Threat Monitoring**
-- **Scrapy framework** used for crawling `.onion` websites
-- **Selenium automation** to bypass login & CAPTCHA verification
-- **Tor proxy integration** for accessing dark web content
+### 🕵️ **다크웹 크롤링 및 위협 모니터링**
+- Scrapy 프레임워크를 활용한 `.onion` 웹사이트 크롤링
+- Selenium을 이용한 로그인 및 CAPTCHA 우회 자동화
+- Tor 프록시를 통한 다크웹 데이터 수집
 
-### 🔔 **Automated Alert System**
-- **Slack API integration** for real-time notifications
-- **Database logging** to track monitored domains
+### 🔔 **실시간 보안 경고 시스템**
+- Slack API를 이용한 즉각적인 알림 전송
+- 데이터베이스에 자동 저장하여 분석 가능
 
-### 🌐 **Web-Based Threat Analysis Dashboard**
-- **Flask-based UI** for security visualization
-- **Interactive country-based visualization** of threat data
+### 🌐 **웹 기반 보안 위협 분석 대시보드**
+- Flask 기반 UI 제공 (검색 및 데이터 시각화)
+- 랜섬웨어 피해 도메인 국가별 분포 시각화 지원
 
 ---
 
-## 📜 Project Structure
+## 📜 프로젝트 구조
 
 ```bash
 📂 darkweb_crawler
-│── 📜 README.md   # Project Documentation
-│── 📂 darkweb_crawler  # Main crawler directory
+│── 📜 README.md   # 프로젝트 문서
+│── 📂 darkweb_crawler  # 크롤러 디렉토리
 │   │── 📂 data
-│   │   ├── leaked_credit_cards.json  # Extracted leaked data
+│   │   ├── leaked_credit_cards.json  # 수집된 유출 데이터
 │   │── 📂 spiders
 │   │   ├── static/
-│   │   │   ├── 도룡농.jpg  # Static assets (example)
-│   │   ├── templates/  # HTML templates for Flask UI
+│   │   │   ├── 도룡농.jpg  # 정적 파일 예시
+│   │   ├── templates/  # Flask UI 템플릿
 │   │   │   ├── country_visualization.html
 │   │   │   ├── index.html
 │   │   │   ├── visualization.html
-│   │── app.py    # Web application backend
-│   │── config.json   # Configuration file
-│   │── fetch_cookies.py  # Authentication handling
-│   │── known_domains.json  # Detected domains storage
-│   │── ransom_monitor1.py  # Tor-based crawler
-│   │── ransom_monitor2.py  # Selenium-based monitor
-│   │── ransom_monitor3.py  # Recursive domain scanning
-│   │── victim.db  # SQLite database storage
-│   │── middlewares.py  # Scrapy middlewares
-│   │── settings.py  # Scrapy settings
-│   │── scrapy.cfg  # Scrapy project config
+│   │── app.py    # 웹 애플리케이션 백엔드
+│   │── config.json   # 설정 파일
+│   │── fetch_cookies.py  # 인증 처리
+│   │── known_domains.json  # 감지된 도메인 목록 저장
+│   │── ransom_monitor1.py  # Tor 기반 크롤러
+│   │── ransom_monitor2.py  # Selenium 기반 크롤링
+│   │── ransom_monitor3.py  # 재귀적 도메인 스캔
+│   │── victim.db  # SQLite 데이터베이스
+│   │── middlewares.py  # Scrapy 미들웨어
+│   │── settings.py  # Scrapy 설정 파일
+│   │── scrapy.cfg  # Scrapy 프로젝트 설정
 ```
 
 ---
 
-## ⚙️ How to Run
+## ⚙️ 실행 방법
 
-### 1️⃣ **Set Up Virtual Environment & Install Dependencies**
+### 1️⃣ **가상환경 설정 및 필수 패키지 설치**
 ```bash
 python -m venv venv
 source venv/bin/activate  # Mac/Linux
@@ -78,26 +78,26 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-### 2️⃣ **Start Dark Web Crawling**
+### 2️⃣ **다크웹 크롤링 시작**
 ```bash
 python darkweb_crawler/ransom_monitor1.py
 python darkweb_crawler/ransom_monitor2.py
 python darkweb_crawler/ransom_monitor3.py
 ```
 
-### 3️⃣ **Run Flask Web Dashboard**
+### 3️⃣ **Flask 기반 웹 대시보드 실행**
 ```bash
 python darkweb_crawler/app.py
 ```
 
 ---
 
-## 📬 Contact & Links
+## 📬 문의 및 참고 자료
 
 🔗 **GitHub:** [github.com/Yamewrong](https://github.com/Yamewrong)  
-🔗 **Tistory Blog:** [yamewrong.tistory.com](https://yamewrong.tistory.com)  
-📧 **Email:** [your_email@example.com](mailto:your_email@example.com)  
+🔗 **기술 블로그:** [yamewrong.tistory.com](https://yamewrong.tistory.com)  
+📧 **이메일:** [yameiswrong@gmail.com](mailto:your_yameiswrong@gmail.com)  
 
 ---
 
-🚀 *Enhancing cybersecurity with automated dark web intelligence!*
+🚀 *자동화된 다크웹 인텔리전스로 사이버 보안을 강화합니다!*
